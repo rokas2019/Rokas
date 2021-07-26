@@ -1,11 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
+# ttk naudojamas tik del dizaino
 import yfinance as yahooFinance
 from yahoo_fin import stock_info
 
 LARGE_FONT = ("Verdana", 13)
 
-
+# Pagrindinė Frame funkcijos GUI inicializacija
 class SeaofStocks(tk.Tk):
 
     def __init__(self):
@@ -31,7 +32,7 @@ class SeaofStocks(tk.Tk):
         frame = self.frames[cont]
         frame.tkraise()
 
-
+# Pagrindinio lango aprašymas
 class MarketOverwatch(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -45,13 +46,14 @@ class MarketOverwatch(tk.Frame):
         label3.grid(row=4, sticky="w")
         result = tk.Label(self, text="", font=LARGE_FONT, textvariable=Current_stock)
         result.grid(row=4, column=1, sticky="w")
-
+        # yahoo bibliotekos metodas gauti Live Stock price
         def stock_price():
             price = stock_info.get_live_price(e1.get())
             Current_stock.set(price)
-
+        # Įvedimo laukas
         e1 = tk.Entry(self)
         e1.grid(row=1, column=1)
+        # Search mygtukas su komanda ištraukti price
         button0 = ttk.Button(self, text="Show", command=stock_price)
         button0.grid(row=1, column=2, columnspan=2, rowspan=1, padx=10, pady=10)
         button = ttk.Button(self, text="Favorite Stocks",
@@ -62,14 +64,14 @@ class MarketOverwatch(tk.Frame):
                              command=lambda: controller.show_frame(HistoricalData))
         button2.grid(row=8, column=1, sticky="WENS")
 
-
+# Favorites Langas
 class FavoriteStocks(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
         Current_stock = tk.StringVar()
-
+        # Mygtukų metodai
         def pushed_fav_1():
             price = stock_info.get_live_price('ASXC')
             Current_stock.set(price)
@@ -105,7 +107,7 @@ class FavoriteStocks(tk.Frame):
         def pushed_fav_9():
             price = stock_info.get_live_price('ZOM')
             Current_stock.set(price)
-
+        # mygtukų sudėjimas ant ekrano
         button_1 = ttk.Button(self, text="ASXC", command=pushed_fav_1)
         button_1.grid(row=5, column=0, columnspan=1, padx=20, pady=20, sticky="wens")
         button_2 = ttk.Button(self, text="IDEX", command=pushed_fav_2)
@@ -139,7 +141,7 @@ class FavoriteStocks(tk.Frame):
                              command=lambda: controller.show_frame(HistoricalData))
         button2.grid(row=9, column=1, sticky="ENSW")
 
-
+#Nepilnai baigtas puslapis gaunu error su metodu traukti info apie Stock
 class HistoricalData(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -150,12 +152,17 @@ class HistoricalData(tk.Frame):
         label.grid(row=1, sticky="wens")
         entry = tk.Entry(self)
         entry.grid(row=1, column=1)
-        GetInformation = yahooFinance.Ticker("ASXC")
+
+        # Čia bandžiau įdeti i metoda gauti info - Kur Ticker.(entry.get())
+        # Dėja gaunu error kurio nesugebu ištaisyti.
+        # Palikau tik tokį variantą kuris iš karto ištraukia info
+
+        GetInformation = yahooFinance.Ticker("FB")
         list0 = (GetInformation.history(period="1mo"))
 
         button1 = ttk.Button(self, text="SEARCH", command=lambda: GetInformation)
         button1.grid(row=1, column=2)
-
+        # Panaudojau text funkciją
         text = tk.Text(self)
         text.insert(tk.END, list0)
         text.grid(row=2, columnspan=7)
